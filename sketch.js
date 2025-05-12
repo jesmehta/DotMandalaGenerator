@@ -1,62 +1,136 @@
-let sizeSlider, colorPicker;
+let sizeSlider, fillColorPicker, strokeColorPicker, strokeWeightSlider, symmetrySlider;
 let previewSize = 25;
-let previewColor = "#3366ff";
 let previewCtx;
+let fillColor = "#3366ff";
+let strokeColor = "#000000";
+let strokeWeightVal = 1;
+let symmetry = 6;
+let drawMode = "fill";
 
 function setup() {
-  let canvas = createCanvas(600, 600);
-  canvas.parent("canvas-holder");
+  let canvas = createCanvas(700, 700);
+  canvas.parent('canvas-holder');
+  noCursor();
 
-  sizeSlider = document.getElementById("sizeSlider");
-  colorPicker = document.getElementById("colorPicker");
-  
-  // Setup preview canvas
-  const previewCanvas = document.getElementById("sizePreviewCanvas");
-  previewCtx = previewCanvas.getContext("2d");
+  // Get UI elements
+  sizeSlider = document.getElementById('sizeSlider');
+  fillColorPicker = document.getElementById('fillColorPicker');
+  strokeColorPicker = document.getElementById('strokeColorPicker');
+  strokeWeightSlider = document.getElementById('strokeWeightSlider');
+  symmetrySlider = document.getElementById('symmetrySlider');
+  previewCtx = document.getElementById('sizePreviewCanvas').getContext('2d');
 
+const symmetryLabel = document.getElementById('symmetryLabel');
+symmetrySlider.addEventListener('input', () => {
+  symmetry = parseInt(symmetrySlider.value);
+  symmetryLabel.textContent = `Symmetry: ${symmetry}`;
+  updateSizePreview();
+});
 
-  // update both size and color on input
-  sizeSlider.addEventListener("input", () => {
-    previewSize = parseInt(sizeSlider.value);
+  document.querySelectorAll('input[name="drawMode"]').forEach((radio) => {
+    radio.addEventListener('input', () => {
+      drawMode = radio.value;
+      updateSizePreview();
+    });
+  });
+
+  // Set initial values
+  updateFromUI();
+
+  // Event listeners
+  sizeSlider.addEventListener('input', () => {
+    previewSize = parseFloat(sizeSlider.value);
     updateSizePreview();
   });
 
-  colorPicker.addEventListener("input", () => {
-    previewColor = colorPicker.value;
+  fillColorPicker.addEventListener('input', () => {
+    fillColor = fillColorPicker.value;
     updateSizePreview();
   });
 
-  updateSizePreview();  // call once after assigning previewSize and previewColor
+  strokeColorPicker.addEventListener('input', () => {
+    strokeColor = strokeColorPicker.value;
+    updateSizePreview();
+  });
 
+  strokeWeightSlider.addEventListener('input', () => {
+    strokeWeightVal = parseFloat(strokeWeightSlider.value);
+    updateSizePreview();
+  });
+
+  symmetrySlider.addEventListener('input', () => {
+    symmetry = parseInt(symmetrySlider.value);
+    updateSizePreview();
+  });
+
+  updateSizePreview();
+}
+
+function updateFromUI() {
+  previewSize = parseFloat(sizeSlider.value);
+  fillColor = fillColorPicker.value;
+  strokeColor = strokeColorPicker.value;
+  strokeWeightVal = parseFloat(strokeWeightSlider.value);
+  symmetry = parseInt(symmetrySlider.value);
 }
 
 function draw() {
   background(255);
 
-  // mouse-following preview
   if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-    fill(hexToRGBA(previewColor, 0.4));
-    stroke(previewColor);
-    strokeWeight(1);
-    ellipse(mouseX, mouseY, previewSize);
+    push();
+    translate(mouseX, mouseY);
+
+    for (let i = 0; i < symmetry; i++) {
+      push();
+      rotate((360 / symmetry) * i);
+      drawPreviewCircle();
+      pop();
+    }
+
+    pop();
   }
+}
+
+function drawPreviewCircle() {
+  if (drawMode === "fill" || drawMode === "both") {
+    fill(hexToRGBA(fillColor, 0.4));
+  } else {
+    noFill();
+  }
+
+  if (drawMode === "stroke" || drawMode === "both") {
+    stroke(strokeColor);
+    strokeWeight(strokeWeightVal);
+  } else {
+    noStroke();
+  }
+
+  ellipse(0, 0, previewSize);
 }
 
 function updateSizePreview() {
   previewCtx.clearRect(0, 0, 60, 60);
-  previewCtx.fillStyle = hexToRGBA(previewColor, 0.4);
+
   previewCtx.beginPath();
   previewCtx.arc(30, 30, previewSize / 2, 0, 2 * Math.PI);
-  previewCtx.fill();
+  previewCtx.closePath();
 
-  previewCtx.strokeStyle = previewColor;
-  previewCtx.lineWidth = 1;
-  previewCtx.stroke();
+  if (drawMode === "fill" || drawMode === "both") {
+    previewCtx.fillStyle = hexToRGBA(fillColor, 0.4);
+    previewCtx.fill();
+  }
+
+  if (drawMode === "stroke" || drawMode === "both") {
+    previewCtx.strokeStyle = strokeColor;
+    previewCtx.lineWidth = strokeWeightVal;
+    previewCtx.stroke();
+  }
 }
 
 function hexToRGBA(hex, alpha = 1) {
-  let r = parseInt(hex.substring(1, 3), 16);
-  let g = parseInt(hex.substring(3, 5), 16);
-  let b = parseInt(hex.substring(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  let r = parseInt(hex.slice(1, 3), 16);
+  let g = parseInt(hex.slice(3, 5), 16);
+  let b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
 }
