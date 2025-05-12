@@ -1,7 +1,8 @@
-// sketch.js — updated to match corrected Dot class and fix centering, color, and scaling issues
+// sketch.js — Full version restored after troubleshooting
 
 let sizeSlider, fillColorPicker, strokeColorPicker, strokeWeightSlider, symmetrySlider;
 let drawModeRadios;
+let gridToggle, gridSymmetrySlider, gridRadiusGapSlider;
 let previewCtx;
 let size = 25;
 let col = '#3366ff';
@@ -11,32 +12,51 @@ let sym = 6;
 let fillFlag = true;
 let strokeFlag = false;
 let mandala = [];
+let gridLayer;
+let showGrid = true;
+let gridSym = 12;
+let gridGap = 50;
 
 function setup() {
+  console.log("Setup starting...");
   let canvas = createCanvas(700, 700);
   canvas.parent('canvas-holder');
   noCursor();
   colorMode(RGB, 255);
   angleMode(DEGREES);
+  noLoop();
 
+  gridLayer = createGraphics(700, 700);
+  gridLayer.colorMode(RGB, 255);
+  gridLayer.angleMode(DEGREES);
 
-  // UI elements
   sizeSlider = document.getElementById('sizeSlider');
   fillColorPicker = document.getElementById('fillColorPicker');
   strokeColorPicker = document.getElementById('strokeColorPicker');
   strokeWeightSlider = document.getElementById('strokeWeightSlider');
   symmetrySlider = document.getElementById('symmetrySlider');
-  previewCtx = document.getElementById('sizePreviewCanvas').getContext('2d');
+  gridToggle = document.getElementById('gridToggle');
+  gridSymmetrySlider = document.getElementById('gridSymmetrySlider');
+  gridRadiusGapSlider = document.getElementById('gridRadiusGapSlider');
+  previewCtx = document.getElementById('sizePreviewCanvas')?.getContext('2d');
   drawModeRadios = document.querySelectorAll('input[name="drawMode"]');
 
   document.getElementById('symmetryLabel').textContent = `Symmetry: ${symmetrySlider.value}`;
+  document.getElementById('gridSymmetryLabel').textContent = `Grid Symmetry: ${gridSym}`;
+
   bindUI();
   bindAdminControls();
+  drawGrid();
   updateSizePreview();
+  console.log("Setup complete");
+  redraw();
 }
 
 function draw() {
+  console.log("Draw running");
   background(255);
+  if (showGrid) image(gridLayer, 0, 0);
+
   for (let d of mandala) {
     d.show();
   }
@@ -57,6 +77,11 @@ function draw() {
 function mousePressed() {
   if (!mouseInCanvas()) return;
   mandala.push(new Dot(mouseX, mouseY, size, col, strWt, strokeFlag, fillFlag, sym, strokeCol));
+  redraw();
+}
+
+function mouseMoved() {
+  redraw();
 }
 
 function drawDotPreview() {
@@ -69,7 +94,12 @@ function drawDotPreview() {
   ellipse(mouseX - width / 2, mouseY - height / 2, size);
 }
 
+function mouseInCanvas() {
+  return mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height;
+}
+
 function updateSizePreview() {
+  if (!previewCtx) return;
   previewCtx.clearRect(0, 0, 60, 60);
   previewCtx.beginPath();
   previewCtx.arc(30, 30, size / 2, 0, 2 * Math.PI);
@@ -87,35 +117,36 @@ function updateSizePreview() {
   }
 }
 
-function mouseInCanvas() {
-  return mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height;
-}
-
 function bindUI() {
   sizeSlider.addEventListener('input', () => {
     size = parseFloat(sizeSlider.value);
     updateSizePreview();
+    redraw();
   });
 
   fillColorPicker.addEventListener('input', () => {
     col = fillColorPicker.value;
     updateSizePreview();
+    redraw();
   });
 
   strokeColorPicker.addEventListener('input', () => {
     strokeCol = strokeColorPicker.value;
     updateSizePreview();
+    redraw();
   });
 
   strokeWeightSlider.addEventListener('input', () => {
     strWt = parseFloat(strokeWeightSlider.value);
     updateSizePreview();
+    redraw();
   });
 
   symmetrySlider.addEventListener('input', () => {
     sym = parseInt(symmetrySlider.value);
     document.getElementById('symmetryLabel').textContent = `Symmetry: ${sym}`;
     updateSizePreview();
+    redraw();
   });
 
   drawModeRadios.forEach((radio) => {
@@ -124,7 +155,26 @@ function bindUI() {
       fillFlag = mode === 'fill' || mode === 'both';
       strokeFlag = mode === 'stroke' || mode === 'both';
       updateSizePreview();
+      redraw();
     });
+  });
+
+  gridToggle.addEventListener('change', () => {
+    showGrid = gridToggle.checked;
+    redraw();
+  });
+
+  gridSymmetrySlider.addEventListener('input', () => {
+    gridSym = parseInt(gridSymmetrySlider.value);
+    document.getElementById('gridSymmetryLabel').textContent = `Grid Symmetry: ${gridSym}`;
+    drawGrid();
+    redraw();
+  });
+
+  gridRadiusGapSlider.addEventListener('input', () => {
+    gridGap = parseInt(gridRadiusGapSlider.value);
+    drawGrid();
+    redraw();
   });
 }
 
@@ -140,7 +190,12 @@ function bindAdminControls() {
   };
 
   document.getElementById('savePngBtn').onclick = () => {
-    saveCanvas('mandala_' + nf(frameCount, 4), 'png');
+    let original = showGrid;
+    showGrid = false;
+    redraw();
+    saveCanvas(getDateTimeString("dotMandala_"), 'png');
+    showGrid = original;
+    redraw();
   };
 
   document.getElementById('exportJsonBtn').onclick = () => {
@@ -149,7 +204,7 @@ function bindAdminControls() {
     let url = URL.createObjectURL(blob);
     let a = document.createElement('a');
     a.href = url;
-    a.download = 'mandala.json';
+    a.download = getDateTimeString("dotMandala_") + '.json';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -173,4 +228,39 @@ function bindAdminControls() {
     };
     reader.readAsText(file);
   });
+}
+
+function drawGrid() {
+  gridLayer.clear();
+  gridLayer.push();
+  gridLayer.translate(width / 2, height / 2);
+  gridLayer.stroke(200);
+  gridLayer.strokeWeight(0.5);
+  gridLayer.noFill();
+
+  let maxRadius = dist(0, 0, width / 2, height / 2);
+
+  for (let r = gridGap; r < maxRadius; r += gridGap) {
+    gridLayer.ellipse(0, 0, r * 2, r * 2);
+  }
+
+  for (let i = 0; i < gridSym; i++) {
+    gridLayer.push();
+    gridLayer.rotate((360 / gridSym) * i);
+    gridLayer.line(0, 0, 0, -maxRadius);
+    gridLayer.pop();
+  }
+
+  gridLayer.pop();
+}
+
+function getDateTimeString(pre = "") {
+  let d = new Date();
+  let ds = nf(d.getFullYear(), 4) +
+           nf(d.getMonth() + 1, 2) +
+           nf(d.getDate(), 2) + "_" +
+           nf(d.getHours(), 2) +
+           nf(d.getMinutes(), 2) +
+           nf(d.getSeconds(), 2);
+  return pre + ds;
 }

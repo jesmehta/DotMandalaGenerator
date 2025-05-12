@@ -44,9 +44,20 @@
     <input type="range" id="symmetrySlider" min="2" max="24" step="1" value="6">
 
     <hr>
+    <div id="grid-controls">
+      <label><input type="checkbox" id="gridToggle" checked> Show Grid</label>
+
+      <label for="gridSymmetrySlider"><span id="gridSymmetryLabel">Grid Symmetry: 12</span></label>
+      <input type="range" id="gridSymmetrySlider" min="2" max="48" step="1" value="12">
+
+      <label for="gridRadiusGapSlider">Grid Circle Gap:</label>
+      <input type="range" id="gridRadiusGapSlider" min="10" max="200" step="10" value="50">
+    </div>
+
+    <hr>
     <div id="admin-panel">
-      <button id="clearBtn">Clear</button>
       <button id="undoBtn">Undo</button>
+      <button id="clearBtn">Clear</button>
       <button id="savePngBtn">Save PNG</button>
       <button id="exportJsonBtn">Export JSON</button>
       <input type="file" id="importJsonInput" style="display: none;">
@@ -62,6 +73,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="sketch.js"></script>
   <script src="dot.js"></script>
+  <script src="timeStamps.js"></script>
 </body>
 
 </html>

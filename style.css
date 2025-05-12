@@ -11,16 +11,44 @@ body {
 
 #ui-panel {
   width: 280px;
-  padding: 20px;
   background: #f4f4f4;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+
+  max-height: 100vh;  /* ensures it doesn't overflow the screen */
+  overflow-y: auto;   /* adds scroll if needed */
+  padding: 25px;       /* reduce padding */
+  gap: 6px;
 }
+
+/* #ui-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+} */
+
 
 #ui-panel label {
   display: block;
-  margin-top: 12px;
+  font-size: 13px;
+  margin-bottom: 2px;  /* tighter space between label and slider */
+  margin-top: 8px;     /* uniform space above each control group */
 }
+
+#ui-panel input[type="range"],
+#ui-panel input[type="color"],
+#ui-panel input[type="number"] {
+  display: block;
+  margin-bottom: 4px;
+    width: 100%;
+}
+
+
+/* #admin-panel button {
+  font-size: 10px;
+  padding: 2px 2px;
+  margin-top: 2px;
+} */
 
 input[type="range"],
 input[type="color"] {
@@ -84,4 +112,13 @@ input[type="color"] {
   padding: 6px;
   font-size: 13px;
   cursor: pointer;
+}
+
+#grid-controls {
+  margin-top: 16px;
+}
+
+#grid-controls label {
+  display: block;
+  margin-top: 10px;
 }
