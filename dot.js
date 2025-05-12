@@ -1,53 +1,57 @@
-/*Boilerplate
-let cluster = [];
+// dot.js — corrected and simplified for RGB mode, centered canvas, and proper symmetry
 
-for(let i = 0;i < 10;i++)
-{
-let p = new Particle();
-cluster.push(p);
-}
-
-for(let i = 0;i < cluster.length;i++)
-{
-cluster[i].display();
-cluster[i].update();
-}
-
-*/
-
-class Particle {
-  constructor(size, col, sym, strokeFlag, fillFlag, strWt) {
-    this.posX = mouseX - width / 2;
-    this.posY = mouseY - height / 2;
+class Dot {
+  constructor(x, y, size, col, strWt, strokeFlag, fillFlag, sym, strokeCol) {
+    this.x = x; // absolute canvas coordinates
+    this.y = y;
     this.size = size;
-    this.col = col;
-    this.sym = sym;
+    this.col = col; // hex string (e.g. "#33ccff")
+    this.strWt = strWt;
     this.strokeFlag = strokeFlag;
     this.fillFlag = fillFlag;
-    this.strWt = strWt;
+    this.sym = sym;
+    this.strokeCol = strokeCol; // hex string
   }
 
-  display() {
-    if (this.fillFlag) {
-      fill(this.col);
-    } else {
-      noFill();
-    }
-
-    if (this.strokeFlag) {
-      stroke(this.col);
-    } else {
-      noStroke();
-    }
-
-    let d = 360 / this.sym;
-    // print(d);
+  show() {
     push();
-    for (let i = 0; i < sym; i++) {
-      // line(0,0,mouseX-width/2, mouseY-height/2);
-      circle(this.posX, this.posY, this.size);
-      rotate(d);
+    translate(width / 2, height / 2); // center the drawing
+
+    for (let i = 0; i < this.sym; i++) {
+      push();
+      rotate((360 / this.sym) * i);
+
+      if (this.fillFlag) {
+        fill(this.col);
+      } else {
+        noFill();
+      }
+
+      if (this.strokeFlag) {
+        stroke(this.strokeCol);
+        strokeWeight(this.strWt);
+      } else {
+        noStroke();
+      }
+
+      ellipse(this.x - width / 2, this.y - height / 2, this.size);
+      pop();
     }
+
     pop();
+  }
+
+  export() {
+    return {
+      x: this.x,
+      y: this.y,
+      size: this.size,
+      col: this.col,
+      strWt: this.strWt,
+      strokeFlag: this.strokeFlag,
+      fillFlag: this.fillFlag,
+      sym: this.sym,
+      strokeCol: this.strokeCol
+    };
   }
 }
