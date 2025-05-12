@@ -1,47 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Radial Brush Preview</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-<div id="ui-panel">
-  <canvas id="sizePreviewCanvas" width="60" height="60"></canvas>
+  <div id="ui-panel">
+    <canvas id="sizePreviewCanvas" width="60" height="60"></canvas>
 
-  <label for="sizeSlider">Brush Size:</label>
-  <input type="range" id="sizeSlider" min="5" max="50" value="25" step="1">
+    <label for="sizeSlider">Brush Size:</label>
+    <input type="range" id="sizeSlider" min="5" max="50" value="25" step="1">
 
-  <div id="color-row">
-    <div>
-      <label for="fillColorPicker" style="text-align: center;">Fill</label>
-      <input type="color" id="fillColorPicker" value="#3366ff">
+    <div id="color-row">
+      <div>
+        <label for="fillColorPicker" style="text-align: center;">Fill</label>
+        <input type="color" id="fillColorPicker" value="#3366ff">
+      </div>
+      <div>
+        <label for="strokeColorPicker" style="text-align: center;">Stroke</label>
+        <input type="color" id="strokeColorPicker" value="#000000">
+      </div>
     </div>
-    <div>
-      <label for="strokeColorPicker" style="text-align: center;">Stroke</label>
-      <input type="color" id="strokeColorPicker" value="#000000">
+
+    <label for="strokeWeightSlider">Stroke Weight:</label>
+    <input type="range" id="strokeWeightSlider" min="0.5" max="5" step="0.1" value="1">
+
+    <div id="mode-row">
+      <label>
+        <input type="radio" name="drawMode" value="fill" checked><br>Fill
+      </label>
+      <label>
+        <input type="radio" name="drawMode" value="stroke"><br>Stroke
+      </label>
+      <label>
+        <input type="radio" name="drawMode" value="both"><br>Both
+      </label>
     </div>
+
+    <label for="symmetrySlider"><span id="symmetryLabel">Symmetry: 6</span></label>
+    <input type="range" id="symmetrySlider" min="2" max="24" step="1" value="6">
+
+    <hr>
+    <div id="admin-panel">
+      <button id="clearBtn">Clear</button>
+      <button id="undoBtn">Undo</button>
+      <button id="savePngBtn">Save PNG</button>
+      <button id="exportJsonBtn">Export JSON</button>
+      <input type="file" id="importJsonInput" style="display: none;">
+      <button id="importJsonBtn">Import JSON</button>
+    </div>
+
   </div>
-
-  <label for="strokeWeightSlider">Stroke Weight:</label>
-  <input type="range" id="strokeWeightSlider" min="0.5" max="5" step="0.1" value="1">
-
-  <div id="mode-row">
-    <label>
-      <input type="radio" name="drawMode" value="fill" checked><br>Fill
-    </label>
-    <label>
-      <input type="radio" name="drawMode" value="stroke"><br>Stroke
-    </label>
-    <label>
-      <input type="radio" name="drawMode" value="both"><br>Both
-    </label>
-  </div>
-  
-  <label for="symmetrySlider"><span id="symmetryLabel">Symmetry: 6</span></label>
-  <input type="range" id="symmetrySlider" min="2" max="24" step="1" value="6">
-
-</div>
 
 
 
@@ -49,5 +61,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="sketch.js"></script>
+  <script src="dot.js"></script>
 </body>
+
 </html>

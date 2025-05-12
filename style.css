@@ -72,3 +72,16 @@ input[type="color"] {
   align-items: center;
   justify-content: center;
 }
+
+#admin-panel {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#admin-panel button {
+  padding: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
