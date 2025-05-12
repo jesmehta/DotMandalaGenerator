@@ -1,79 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Radial Brush Preview</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <script language="javascript" type="text/javascript" src="libraries/p5.js"></script>
+  <script language="javascript" src="libraries/p5.dom.js"></script>
+  <script language="javascript" src="libraries/p5.sound.js"></script>
+  <script language="javascript" type="text/javascript" src="sketch.js"></script>
+  <script language="javascript" type="text/javascript" src="dot.js"></script>
+  <script language="javascript" type="text/javascript" src="timeStamps.js"></script>
+  <!-- <script src="https://unpkg.com/p5.js-svg@1.1.1"></script> -->
+
 </head>
 
 <body>
-  <div id="ui-panel">
-    <canvas id="sizePreviewCanvas" width="60" height="60"></canvas>
-
-    <label for="sizeSlider">Brush Size:</label>
-    <input type="range" id="sizeSlider" min="5" max="50" value="25" step="1">
-
-    <div id="color-row">
-      <div>
-        <label for="fillColorPicker" style="text-align: center;">Fill</label>
-        <input type="color" id="fillColorPicker" value="#3366ff">
-      </div>
-      <div>
-        <label for="strokeColorPicker" style="text-align: center;">Stroke</label>
-        <input type="color" id="strokeColorPicker" value="#000000">
-      </div>
-    </div>
-
-    <label for="strokeWeightSlider">Stroke Weight:</label>
-    <input type="range" id="strokeWeightSlider" min="0.5" max="5" step="0.1" value="1">
-
-    <div id="mode-row">
-      <label>
-        <input type="radio" name="drawMode" value="fill" checked><br>Fill
-      </label>
-      <label>
-        <input type="radio" name="drawMode" value="stroke"><br>Stroke
-      </label>
-      <label>
-        <input type="radio" name="drawMode" value="both"><br>Both
-      </label>
-    </div>
-
-    <label for="symmetrySlider"><span id="symmetryLabel">Symmetry: 6</span></label>
-    <input type="range" id="symmetrySlider" min="2" max="24" step="1" value="6">
-
-    <hr>
-    <div id="grid-controls">
-      <label><input type="checkbox" id="gridToggle" checked> Show Grid</label>
-
-      <label for="gridSymmetrySlider"><span id="gridSymmetryLabel">Grid Symmetry: 12</span></label>
-      <input type="range" id="gridSymmetrySlider" min="2" max="48" step="1" value="12">
-
-      <label for="gridRadiusGapSlider">Grid Circle Gap:</label>
-      <input type="range" id="gridRadiusGapSlider" min="10" max="200" step="10" value="50">
-    </div>
-
-    <hr>
-    <div id="admin-panel">
-      <button id="undoBtn">Undo</button>
-      <button id="clearBtn">Clear</button>
-      <button id="savePngBtn">Save PNG</button>
-      <button id="exportJsonBtn">Export JSON</button>
-      <input type="file" id="importJsonInput" style="display: none;">
-      <button id="importJsonBtn">Import JSON</button>
-    </div>
-
-  </div>
-
-
-
-  <div id="canvas-holder"></div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  <script src="sketch.js"></script>
-  <script src="dot.js"></script>
-  <script src="timeStamps.js"></script>
 </body>
-
 </html>
+
+<!-- Code is copyright by Jesal Mehta, 15/01/2021
+     The output of this program is free to use for non-commercial purposes (for your plotters, laser engravers etc). Contact me if you need a different license.
+-->

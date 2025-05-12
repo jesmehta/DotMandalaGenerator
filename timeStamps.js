@@ -10,7 +10,7 @@ function keyTyped()
 function saveFile()
 {
   // save("B " + timeStamp() +".svg");
-  saveCanvas("DotMandala " + timeStamp() +".jpg");
+  saveCanvas("B " + timeStamp() +".jpg");
   print("file saved");
 }
 
