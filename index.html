@@ -1,41 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Radial Symmetry Drawer</title>
+    <title>Size Slider with Circle Preview</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="main-container">
-    <div id="controls">
-        <label>Size: <input type="range" id="size" min="5" max="100" value="30"></label><br>
-        <label>Hue: <input type="range" id="hue" min="0" max="360" value="200"></label><br>
-        <label>Saturation: <input type="range" id="saturation" min="0" max="100" value="80"></label><br>
-        <label>Brightness: <input type="range" id="brightness" min="0" max="100" value="80"></label><br>
-
-        <label>Symmetries: <input type="number" id="symmetries" min="1" max="36" value="6"></label><br><br>
-
-        <label><input type="checkbox" id="usePalette"> Use Random Palette</label><br><br>
-
-        <button id="undoBtn">Undo</button>
-        <button id="redoBtn">Redo</button>
-        <button id="resetBtn">Reset</button>
-        <button id="saveBtn">Save PNG</button><br><br>
-        <button id="exportBtn">Download Design</button>
-        <input type="file" id="importFile" accept=".txt" style="display:none;">
-        <button id="importBtn">Load Design</button>
+    <div id="ui-panel">
+        <label for="sizeSlider">Brush Size:</label>
+        <div id="slider-row">
+            <input type="range" id="sizeSlider" min="5" max="50" value="25">
+            <canvas id="sizePreviewCanvas" width="60" height="60"></canvas>
+        </div>
+        <label for="colorPicker">Brush Color:</label>
+        <input type="color" id="colorPicker" value="#3366ff">
     </div>
 
-    <div id="canvas-holder">
-        <!-- The canvas will be attached here by p5.js -->
-    </div>
-</div>
+    <div id="canvas-holder"></div>
 
-<!-- These scripts must stay at bottom: -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-<script src="sketch.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="sketch.js"></script>
 </body>
+
 </html>
