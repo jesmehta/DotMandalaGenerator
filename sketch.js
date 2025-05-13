@@ -157,6 +157,7 @@ function updateSizePreview() {
 function bindUI() {
   sizeSlider.addEventListener("input", () => {
     size = parseFloat(sizeSlider.value);
+    document.getElementById("sizeLabel").textContent = `Brush Size: ${size}`;
     updateSizePreview();
     redraw();
   });
