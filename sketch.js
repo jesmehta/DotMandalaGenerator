@@ -1,19 +1,22 @@
 // sketch.js — Full version restored after troubleshooting
 
 const pastelPalette = [
-  { fill: '#a8dadc', stroke: '#457b9d' },
-  { fill: '#f6bd60', stroke: '#f28482' },
-  { fill: '#e0bbff', stroke: '#957dad' },
-  { fill: '#f1faee', stroke: '#1d3557' },
-  { fill: '#b5ead7', stroke: '#36b1bf' }
+  { fill: "#a8dadc", stroke: "#457b9d" },
+  { fill: "#f6bd60", stroke: "#f28482" },
+  { fill: "#e0bbff", stroke: "#957dad" },
+  { fill: "#f1faee", stroke: "#1d3557" },
+  { fill: "#b5ead7", stroke: "#36b1bf" },
 ];
 
 const palette = pastelPalette[Math.floor(Math.random() * pastelPalette.length)];
 let col = palette.fill;
 let strokeCol = palette.stroke;
 
-
-let sizeSlider, fillColorPicker, strokeColorPicker, strokeWeightSlider, symmetrySlider;
+let sizeSlider,
+  fillColorPicker,
+  strokeColorPicker,
+  strokeWeightSlider,
+  symmetrySlider;
 let drawModeRadios;
 let gridToggle, gridSymmetrySlider, gridRadiusGapSlider;
 let previewCtx;
@@ -30,35 +33,38 @@ let gridLayer;
 let showGrid = true;
 let gridSym = 12;
 let gridGap = 50;
+let backgroundColor = 255; // default white
 
 function setup() {
   console.log("Setup starting...");
   let canvas = createCanvas(700, 700);
-  canvas.parent('canvas-holder');
+  canvas.parent("canvas-holder");
   noCursor();
   colorMode(RGB, 255);
   angleMode(DEGREES);
   noLoop();
 
-
-
   gridLayer = createGraphics(700, 700);
   gridLayer.colorMode(RGB, 255);
   gridLayer.angleMode(DEGREES);
 
-  sizeSlider = document.getElementById('sizeSlider');
-  fillColorPicker = document.getElementById('fillColorPicker');
-  strokeColorPicker = document.getElementById('strokeColorPicker');
-  strokeWeightSlider = document.getElementById('strokeWeightSlider');
-  symmetrySlider = document.getElementById('symmetrySlider');
-  gridToggle = document.getElementById('gridToggle');
-  gridSymmetrySlider = document.getElementById('gridSymmetrySlider');
-  gridRadiusGapSlider = document.getElementById('gridRadiusGapSlider');
-  previewCtx = document.getElementById('sizePreviewCanvas')?.getContext('2d');
+  sizeSlider = document.getElementById("sizeSlider");
+  fillColorPicker = document.getElementById("fillColorPicker");
+  strokeColorPicker = document.getElementById("strokeColorPicker");
+  strokeWeightSlider = document.getElementById("strokeWeightSlider");
+  symmetrySlider = document.getElementById("symmetrySlider");
+  gridToggle = document.getElementById("gridToggle");
+  gridSymmetrySlider = document.getElementById("gridSymmetrySlider");
+  gridRadiusGapSlider = document.getElementById("gridRadiusGapSlider");
+  previewCtx = document.getElementById("sizePreviewCanvas")?.getContext("2d");
   drawModeRadios = document.querySelectorAll('input[name="drawMode"]');
 
-  document.getElementById('symmetryLabel').textContent = `Symmetry: ${symmetrySlider.value}`;
-  document.getElementById('gridSymmetryLabel').textContent = `Grid Symmetry: ${gridSym}`;
+  document.getElementById(
+    "symmetryLabel"
+  ).textContent = `Symmetry: ${symmetrySlider.value}`;
+  document.getElementById(
+    "gridSymmetryLabel"
+  ).textContent = `Grid Symmetry: ${gridSym}`;
 
   fillColorPicker.value = col;
   strokeColorPicker.value = strokeCol;
@@ -73,7 +79,7 @@ function setup() {
 
 function draw() {
   console.log("Draw running");
-  background(255);
+  background(backgroundColor);
   if (showGrid) image(gridLayer, 0, 0);
 
   for (let d of mandala) {
@@ -95,7 +101,19 @@ function draw() {
 
 function mousePressed() {
   if (!mouseInCanvas()) return;
-  mandala.push(new Dot(mouseX, mouseY, size, col, strWt, strokeFlag, fillFlag, sym, strokeCol));
+  mandala.push(
+    new Dot(
+      mouseX,
+      mouseY,
+      size,
+      col,
+      strWt,
+      strokeFlag,
+      fillFlag,
+      sym,
+      strokeCol
+    )
+  );
   redraw();
 }
 
@@ -137,112 +155,139 @@ function updateSizePreview() {
 }
 
 function bindUI() {
-  sizeSlider.addEventListener('input', () => {
+  sizeSlider.addEventListener("input", () => {
     size = parseFloat(sizeSlider.value);
     updateSizePreview();
     redraw();
   });
 
-  fillColorPicker.addEventListener('input', () => {
+  fillColorPicker.addEventListener("input", () => {
     col = fillColorPicker.value;
     updateSizePreview();
     redraw();
   });
 
-  strokeColorPicker.addEventListener('input', () => {
+  strokeColorPicker.addEventListener("input", () => {
     strokeCol = strokeColorPicker.value;
     updateSizePreview();
     redraw();
   });
 
-  strokeWeightSlider.addEventListener('input', () => {
+  strokeWeightSlider.addEventListener("input", () => {
     strWt = parseFloat(strokeWeightSlider.value);
     updateSizePreview();
     redraw();
   });
 
-  symmetrySlider.addEventListener('input', () => {
+  symmetrySlider.addEventListener("input", () => {
     sym = parseInt(symmetrySlider.value);
-    document.getElementById('symmetryLabel').textContent = `Symmetry: ${sym}`;
+    document.getElementById("symmetryLabel").textContent = `Symmetry: ${sym}`;
     updateSizePreview();
     redraw();
   });
 
   drawModeRadios.forEach((radio) => {
-    radio.addEventListener('change', () => {
-      const mode = document.querySelector('input[name="drawMode"]:checked').value;
-      fillFlag = mode === 'fill' || mode === 'both';
-      strokeFlag = mode === 'stroke' || mode === 'both';
+    radio.addEventListener("change", () => {
+      const mode = document.querySelector(
+        'input[name="drawMode"]:checked'
+      ).value;
+      fillFlag = mode === "fill" || mode === "both";
+      strokeFlag = mode === "stroke" || mode === "both";
       updateSizePreview();
       redraw();
     });
   });
 
-  gridToggle.addEventListener('change', () => {
+  gridToggle.addEventListener("change", () => {
     showGrid = gridToggle.checked;
     redraw();
   });
 
-  gridSymmetrySlider.addEventListener('input', () => {
+  gridSymmetrySlider.addEventListener("input", () => {
     gridSym = parseInt(gridSymmetrySlider.value);
-    document.getElementById('gridSymmetryLabel').textContent = `Grid Symmetry: ${gridSym}`;
+    document.getElementById(
+      "gridSymmetryLabel"
+    ).textContent = `Grid Symmetry: ${gridSym}`;
     drawGrid();
     redraw();
   });
 
-  gridRadiusGapSlider.addEventListener('input', () => {
+  gridRadiusGapSlider.addEventListener("input", () => {
     gridGap = parseInt(gridRadiusGapSlider.value);
     drawGrid();
     redraw();
   });
+
+  document.getElementById("bgToggle").addEventListener("change", (e) => {
+    backgroundColor = e.target.checked ? 0 : 255;
+    drawGrid(); // 🟢 redraw the grid to match new mode
+    redraw(); // 🟢 trigger canvas redraw
+  });
 }
 
 function bindAdminControls() {
-  document.getElementById('clearBtn').onclick = () => {
+  document.getElementById("clearBtn").onclick = () => {
     mandala = [];
     redraw();
   };
 
-  document.getElementById('undoBtn').onclick = () => {
+  document.getElementById("undoBtn").onclick = () => {
     mandala.pop();
     redraw();
   };
 
-  document.getElementById('savePngBtn').onclick = () => {
+  document.getElementById("savePngBtn").onclick = () => {
     let original = showGrid;
     showGrid = false;
     redraw();
-    saveCanvas(getDateTimeString("dotMandala_"), 'png');
+    saveCanvas(getDateTimeString("dotMandala_"), "png");
     showGrid = original;
     redraw();
   };
 
-  document.getElementById('exportJsonBtn').onclick = () => {
-    let data = JSON.stringify(mandala.map(dot => dot.export()), null, 2);
-    let blob = new Blob([data], { type: 'application/json' });
+  document.getElementById("exportJsonBtn").onclick = () => {
+    let data = JSON.stringify(
+      mandala.map((dot) => dot.export()),
+      null,
+      2
+    );
+    let blob = new Blob([data], { type: "application/json" });
     let url = URL.createObjectURL(blob);
-    let a = document.createElement('a');
+    let a = document.createElement("a");
     a.href = url;
-    a.download = getDateTimeString("dotMandala_") + '.json';
+    a.download = getDateTimeString("dotMandala_") + ".json";
     a.click();
     URL.revokeObjectURL(url);
   };
 
-  document.getElementById('importJsonBtn').onclick = () => {
-    document.getElementById('importJsonInput').click();
+  document.getElementById("importJsonBtn").onclick = () => {
+    document.getElementById("importJsonInput").click();
   };
 
-  document.getElementById('importJsonInput').addEventListener('change', (e) => {
+  document.getElementById("importJsonInput").addEventListener("change", (e) => {
     let file = e.target.files[0];
     if (!file) return;
     let reader = new FileReader();
     reader.onload = function (event) {
       try {
         let imported = JSON.parse(event.target.result);
-        mandala = imported.map(d => new Dot(d.x, d.y, d.size, d.col, d.strWt, d.strokeFlag, d.fillFlag, d.sym, d.strokeCol));
+        mandala = imported.map(
+          (d) =>
+            new Dot(
+              d.x,
+              d.y,
+              d.size,
+              d.col,
+              d.strWt,
+              d.strokeFlag,
+              d.fillFlag,
+              d.sym,
+              d.strokeCol
+            )
+        );
         redraw();
       } catch (err) {
-        alert('Invalid file format!');
+        alert("Invalid file format!");
       }
     };
     reader.readAsText(file);
@@ -253,7 +298,7 @@ function drawGrid() {
   gridLayer.clear();
   gridLayer.push();
   gridLayer.translate(width / 2, height / 2);
-  gridLayer.stroke(200);
+  gridLayer.stroke(backgroundColor === 255 ? 200 : 100);
   gridLayer.strokeWeight(0.5);
   gridLayer.noFill();
 
@@ -275,11 +320,13 @@ function drawGrid() {
 
 function getDateTimeString(pre = "") {
   let d = new Date();
-  let ds = nf(d.getFullYear(), 4) +
-           nf(d.getMonth() + 1, 2) +
-           nf(d.getDate(), 2) + "_" +
-           nf(d.getHours(), 2) +
-           nf(d.getMinutes(), 2) +
-           nf(d.getSeconds(), 2);
+  let ds =
+    nf(d.getFullYear(), 4) +
+    nf(d.getMonth() + 1, 2) +
+    nf(d.getDate(), 2) +
+    "_" +
+    nf(d.getHours(), 2) +
+    nf(d.getMinutes(), 2) +
+    nf(d.getSeconds(), 2);
   return pre + ds;
 }
