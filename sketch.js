@@ -1,12 +1,26 @@
 // sketch.js — Full version restored after troubleshooting
 
+const pastelPalette = [
+  { fill: '#a8dadc', stroke: '#457b9d' },
+  { fill: '#f6bd60', stroke: '#f28482' },
+  { fill: '#e0bbff', stroke: '#957dad' },
+  { fill: '#f1faee', stroke: '#1d3557' },
+  { fill: '#b5ead7', stroke: '#36b1bf' }
+];
+
+const palette = pastelPalette[Math.floor(Math.random() * pastelPalette.length)];
+let col = palette.fill;
+let strokeCol = palette.stroke;
+
+
 let sizeSlider, fillColorPicker, strokeColorPicker, strokeWeightSlider, symmetrySlider;
 let drawModeRadios;
 let gridToggle, gridSymmetrySlider, gridRadiusGapSlider;
 let previewCtx;
 let size = 25;
-let col = '#3366ff';
-let strokeCol = '#000000';
+// let col = '#f6bd60';        // warm peach (fill)
+// let strokeCol = '#f28482';  // coral red (stroke)
+
 let strWt = 1;
 let sym = 6;
 let fillFlag = true;
@@ -26,6 +40,8 @@ function setup() {
   angleMode(DEGREES);
   noLoop();
 
+
+
   gridLayer = createGraphics(700, 700);
   gridLayer.colorMode(RGB, 255);
   gridLayer.angleMode(DEGREES);
@@ -43,6 +59,9 @@ function setup() {
 
   document.getElementById('symmetryLabel').textContent = `Symmetry: ${symmetrySlider.value}`;
   document.getElementById('gridSymmetryLabel').textContent = `Grid Symmetry: ${gridSym}`;
+
+  fillColorPicker.value = col;
+  strokeColorPicker.value = strokeCol;
 
   bindUI();
   bindAdminControls();
